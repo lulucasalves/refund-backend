@@ -1,6 +1,8 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 from pydantic import BaseModel
 import sys
+from sqlalchemy.orm import Session
+from services.users import get_db
 
 sys.path.append("..")
 from controller.authEmail import authEmailController, authEmailCodeController
@@ -25,7 +27,5 @@ async def authEmail(
 
 
 @router.post("/email-code")
-async def authEmailCode(
-    request: AuthEmailCodeRequest,
-):
-    return authEmailCodeController(request.email, request.code)
+async def authEmailCode(request: AuthEmailCodeRequest, db: Session = Depends(get_db)):
+    return await authEmailCodeController(request.email, request.code, db)

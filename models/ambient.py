@@ -7,13 +7,10 @@ sys.path.append("..")
 from database.mysql import Base
 
 
-class User(Base):
-    __tablename__ = "user"
+class Ambient(Base):
+    __tablename__ = "ambient"
 
-    userId = Column(
+    ambientId = Column(
         String(36), primary_key=True, index=True, default=lambda: str(uuid.uuid4())
     )
     name = Column(String(100))
-    email = Column(String(100), unique=True)
-    lastLogin = Column(String(100))
-    lastAmbientId = Column(String(100))
