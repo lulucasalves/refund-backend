@@ -1,9 +1,5 @@
-from sqlalchemy import Column, String
+from sqlalchemy import Column, String, DateTime
 import uuid
-
-import sys
-
-sys.path.append("..")
 from database.mysql import Base
 
 
@@ -15,5 +11,5 @@ class User(Base):
     )
     name = Column(String(100))
     email = Column(String(100), unique=True)
-    lastLogin = Column(String(100))
-    lastAmbientId = Column(String(100))
+    lastLogin = Column(DateTime)
+    lastAmbientId = Column(String(36))

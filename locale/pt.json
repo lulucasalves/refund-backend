@@ -1,5 +1,4 @@
 {
-    "code_sended": "Código de verificação foi enviado",
-    "invalid_email": "Endereço de email inválido",
-    "user_not_found": "Usuário não encontrado"
+  "invalid_code": "Código inválido!",
+  "create_user_error": "Erro ao criar usuário!"
 }

@@ -1,31 +1,30 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Request, Depends
 from pydantic import BaseModel
-import sys
+from database.mysql import get_db
 from sqlalchemy.orm import Session
-from services.users import get_db
-
-sys.path.append("..")
-from controller.authEmail import authEmailController, authEmailCodeController
+from controller.auth import generate_email_code_controller, auth_email_controller
+from controller.controller import controller
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 
 
-class AuthEmailRequest(BaseModel):
+class GenerateEmailCodeBody(BaseModel):
     email: str
 
 
-class AuthEmailCodeRequest(BaseModel):
+@router.post("/generate-email-code")
+async def generate_email_code(
+    body: GenerateEmailCodeBody,
+    request: Request,
+):
+    return await controller(generate_email_code_controller, body, request)
+
+
+class EmailBody(BaseModel):
     email: str
     code: str
 
 
 @router.post("/email")
-async def authEmail(
-    request: AuthEmailRequest,
-):
-    return authEmailController(request.email)
-
-
-@router.post("/email-code")
-async def authEmailCode(request: AuthEmailCodeRequest, db: Session = Depends(get_db)):
-    return await authEmailCodeController(request.email, request.code, db)
+async def email(body: EmailBody, request: Request, db: Session = Depends(get_db)):
+    return await controller(auth_email_controller, body, request, db)

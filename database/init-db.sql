@@ -23,14 +23,14 @@ INSERT INTO currency (symbol, country) VALUES ('$', 'US');
 
 CREATE TABLE IF NOT EXISTS dateFormat (
     dateFormatId CHAR(36) PRIMARY KEY DEFAULT (UUID()),
-    dateFormat VARCHAR(50) NOT NULL,
+    dateFormat VARCHAR(10) NOT NULL,
     country VARCHAR(2) NOT NULL,
     createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
-INSERT INTO dateFormat (dateFormat) VALUES ('DD/MM/YYYY');
-INSERT INTO dateFormat (dateFormat) VALUES ('MM/DD/YYYY');
+INSERT INTO dateFormat (dateFormat, country) VALUES ('DD/MM/YYYY', "BR");
+INSERT INTO dateFormat (dateFormat, country) VALUES ('MM/DD/YYYY', "US");
 
 CREATE TABLE IF NOT EXISTS ambient (
     ambientId CHAR(36) PRIMARY KEY DEFAULT (UUID()),
@@ -41,7 +41,7 @@ CREATE TABLE IF NOT EXISTS ambient (
 
 CREATE TABLE IF NOT EXISTS company (
     companyId CHAR(36) PRIMARY KEY DEFAULT (UUID()),
-    name VARCHAR(100) UNIQUE NOT NULL,
+    name VARCHAR(100) NOT NULL,
     statusId CHAR(36) NOT NULL,
     currencyId CHAR(36) NOT NULL,
     dateFormatId CHAR(36) NOT NULL,
@@ -51,7 +51,8 @@ CREATE TABLE IF NOT EXISTS company (
     FOREIGN KEY (statusId) REFERENCES companyStatus(statusId),
     FOREIGN KEY (currencyId) REFERENCES currency(currencyId),
     FOREIGN KEY (dateFormatId) REFERENCES dateFormat(dateFormatId),
-    FOREIGN KEY (ambientId) REFERENCES ambient(ambientId)
+    FOREIGN KEY (ambientId) REFERENCES ambient(ambientId),
+    UNIQUE KEY (name, ambientId)
 );
 
 CREATE TABLE IF NOT EXISTS user (

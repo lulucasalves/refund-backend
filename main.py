@@ -1,6 +1,5 @@
 from fastapi import FastAPI
-from routers import users
-from routers import auth
+from routers import auth, currency
 from dotenv import load_dotenv
 import sys
 from pathlib import Path
@@ -11,8 +10,8 @@ load_dotenv()
 
 app = FastAPI()
 
-app.include_router(users.router)
 app.include_router(auth.router)
+app.include_router(currency.router)
 
 
 @app.get("/hc")
@@ -21,3 +20,4 @@ def read_root():
 
 
 # inicie com "uvicorn main:app --reload"
+# gerar requirements "pip freeze > requirements.txt"

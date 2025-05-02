@@ -14,7 +14,7 @@ ACCESS_TOKEN_EXPIRE_MINUTES = os.getenv("JWT_EXPIRES")
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 
-def createAccessToken(data: dict):
+def create_access_token(data: dict):
     to_encode = data.copy()
 
     expire = datetime.utcnow() + timedelta(minutes=int(ACCESS_TOKEN_EXPIRE_MINUTES))
@@ -23,7 +23,7 @@ def createAccessToken(data: dict):
     return encoded_jwt
 
 
-def verifyToken(token: str):
+def verify_token(token: str):
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         return payload

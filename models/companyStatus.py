@@ -1,9 +1,6 @@
 from sqlalchemy import Column, String
 import uuid
 
-import sys
-
-sys.path.append("..")
 from database.mysql import Base
 
 
