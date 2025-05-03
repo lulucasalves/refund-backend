@@ -9,7 +9,8 @@ load_dotenv()
 
 SECRET_KEY = os.getenv("JWT_SECRET")
 ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = os.getenv("JWT_EXPIRES")
+# ACCESS_TOKEN_EXPIRE_MINUTES = os.getenv("JWT_EXPIRES")
+ACCESS_TOKEN_EXPIRE_MINUTES = 1440
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 

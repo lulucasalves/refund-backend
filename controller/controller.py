@@ -11,8 +11,11 @@ async def controller(function, body, req, db=None):
     except Exception as e:
         accept_language = req.headers.get("Accept-Language") or "en"
 
-        print(e.detail)
-        if hasattr(e, "detail"):
+        if hasattr(e, "status_code") and hasattr(e, "detail"):
+            raise HTTPException(
+                status_code=int(e.status_code), detail=t(e.detail, accept_language)
+            )
+        elif hasattr(e, "detail"):
             [status_code, detail] = e.detail.split(": ")
 
             raise HTTPException(

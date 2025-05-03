@@ -2,12 +2,13 @@ from fastapi import HTTPException
 from datetime import datetime
 
 from services.currency import get_currency_service
+from services.company_status import get_company_status_service
+from services.date_format import get_date_format_service
+
 from models.user import User
 from models.ambient import Ambient
 from models.company import Company
-from models.companyStatus import CompanyStatus
-from models.dateFormat import DateFormat
-from models.userCompany import UserCompany
+from models.user_company import UserCompany
 from utils.serialize_data import serialize_array
 
 
@@ -32,10 +33,6 @@ async def find_user_auth_info(email, db):
         "email": user.email,
         "name": user.name,
         "last_ambient_id": user.lastAmbientId,
-        "companies": [
-            {"company_id": c.companyId, "name": c.name, "ambientId": c.ambientId}
-            for c in companies
-        ],
         "ambients": [{"ambient_id": a.ambientId, "name": a.name} for a in ambients],
     }
 
@@ -49,17 +46,21 @@ async def create_user(email, country, db):
         db.commit()
         db.refresh(ambient)
 
-        status = db.query(CompanyStatus).filter(CompanyStatus.status == "Ativo").first()
+        status = serialize_array(
+            await get_company_status_service({"filters": {"status": ["Ativo"]}}, db)
+        )[0]
         currency = serialize_array(
             await get_currency_service({"filters": {"countries": [country]}}, db)
         )[0]
-        dateFormat = db.query(DateFormat).filter(DateFormat.country == country).first()
+        dateFormat = serialize_array(
+            await get_date_format_service({"filters": {"countries": [country]}}, db)
+        )[0]
 
         company = Company(
             name="Company 1",
-            dateFormatId=dateFormat.dateFormatId,
+            dateFormatId=dateFormat["dateFormatId"],
             currencyId=currency["currencyId"],
-            statusId=status.statusId,
+            statusId=status["statusId"],
             ambientId=ambient.ambientId,
         )
         db.add(company)
