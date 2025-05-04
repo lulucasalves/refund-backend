@@ -33,7 +33,14 @@ async def find_user_auth_info(email, db):
         "email": user.email,
         "name": user.name,
         "last_ambient_id": user.lastAmbientId,
-        "ambients": [{"ambient_id": a.ambientId, "name": a.name} for a in ambients],
+        "ambients": [
+            {
+                "ambient_id": a.ambientId,
+                "name": a.name,
+                "created_at": a.createdAt.isoformat(),
+            }
+            for a in ambients
+        ],
     }
 
 

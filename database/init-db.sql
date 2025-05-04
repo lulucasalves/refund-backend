@@ -7,7 +7,7 @@ CREATE TABLE IF NOT EXISTS companyStatus (
     updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
-INSERT INTO companyStatus (status) VALUES ("Ativo");
+INSERT INTO companyStatus (statusId, status) VALUES ("c0246355-2708-11f0-9bf9-0242ac130002", "Ativo");
 INSERT INTO companyStatus (status) VALUES ("Inativo");
 
 CREATE TABLE IF NOT EXISTS currency (

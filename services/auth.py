@@ -9,7 +9,7 @@ from utils.code_generator import generate_code
 async def generate_email_code_service(email):
     redis_client.setex(f"email:auth-code:{email}", 330, generate_code())
 
-    return {"message": "code_sended"}
+    return {"message": "code_sended", "timer": 60}
 
 
 async def auth_email_service(email, code, client_host, db):
@@ -34,6 +34,6 @@ async def auth_email_service(email, code, client_host, db):
 
         token = create_access_token(userData)
 
-        return {"token": token}
+        return {"token": token, "userData": userData}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))

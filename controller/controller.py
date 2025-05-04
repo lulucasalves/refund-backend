@@ -1,9 +1,11 @@
 from fastapi import HTTPException
 from translator import t
+import asyncio
 
 
 async def controller(function, body, req, db=None):
     try:
+        # await asyncio.sleep(2)
         if db is None:
             return await function(body, req)
         else:

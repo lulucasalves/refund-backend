@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from routers import auth, currency, company_status, date_format, company, ambient
 from dotenv import load_dotenv
 import sys
@@ -9,6 +10,14 @@ sys.path.append(str(Path(__file__).parent.parent))
 load_dotenv()
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 app.include_router(auth.router)
 app.include_router(currency.router)
