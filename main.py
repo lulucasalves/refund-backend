@@ -1,6 +1,15 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from routers import auth, currency, company_status, date_format, company, ambient
+from routers import (
+    auth,
+    currency,
+    company_status,
+    date_format,
+    company,
+    ambient,
+    event_status,
+    event,
+)
 from dotenv import load_dotenv
 import sys
 from pathlib import Path
@@ -22,8 +31,10 @@ app.add_middleware(
 app.include_router(auth.router)
 app.include_router(currency.router)
 app.include_router(company_status.router)
+app.include_router(event_status.router)
 app.include_router(date_format.router)
 app.include_router(company.router)
+app.include_router(event.router)
 app.include_router(ambient.router)
 
 

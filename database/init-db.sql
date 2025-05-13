@@ -7,8 +7,8 @@ CREATE TABLE IF NOT EXISTS companyStatus (
     updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
-INSERT INTO companyStatus (statusId, status) VALUES ("c0246355-2708-11f0-9bf9-0242ac130002", "Ativo");
-INSERT INTO companyStatus (status) VALUES ("Inativo");
+INSERT INTO companyStatus (statusId, status) VALUES ("c0246355-2708-11f0-9bf9-0242ac130002", "active");
+INSERT INTO companyStatus (status) VALUES ("inactive");
 
 CREATE TABLE IF NOT EXISTS currency (
     currencyId CHAR(36) PRIMARY KEY DEFAULT (UUID()),
@@ -74,4 +74,28 @@ CREATE TABLE IF NOT EXISTS userCompany (
     FOREIGN KEY (userId) REFERENCES user(userId),
     FOREIGN KEY (companyId) REFERENCES company(companyId),
     UNIQUE KEY (userId, companyId)
+);
+
+CREATE TABLE IF NOT EXISTS eventStatus (
+    statusId CHAR(36) PRIMARY KEY DEFAULT (UUID()),
+    status VARCHAR(50) NOT NULL,
+    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+INSERT INTO eventStatus (statusId, status) VALUES ("3fc5627a-2127-4cfb-a94f-e47f4d5ec77d", "active");
+INSERT INTO eventStatus (status) VALUES ("inactive");
+
+CREATE TABLE IF NOT EXISTS event (
+    eventId CHAR(36) PRIMARY KEY DEFAULT (UUID()),
+    name VARCHAR(100) NOT NULL,
+    statusId CHAR(36) NOT NULL,
+    startDate DATETIME NOT NULL,
+    endDate DATETIME NOT NULL,
+    companyId CHAR(36) NOT NULL,
+    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (statusId) REFERENCES eventStatus(statusId),
+    FOREIGN KEY (companyId) REFERENCES company(companyId),
+    UNIQUE KEY (name, companyId)
 );
