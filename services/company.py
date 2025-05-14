@@ -1,15 +1,16 @@
 from sqlalchemy.orm import Session
 from models.company import Company
 from models.user_company import UserCompany
+from models.employee import Employee
 from fastapi import HTTPException
 
 
-async def get_company_service(filters, userId, db: Session):
+async def get_company_service(filters, user_id, db: Session):
     query = db.query(Company).join(
         UserCompany, UserCompany.companyId == Company.companyId
     )
 
-    query = query.filter(UserCompany.userId == userId)
+    query = query.filter(UserCompany.userId == user_id)
     query = query.filter(Company.ambientId == filters["ambientId"])
 
     if filters.get("statusId"):
@@ -24,14 +25,8 @@ async def get_company_service(filters, userId, db: Session):
 
 async def delete_company_service(delete, db: Session):
     for item in delete:
-        user_company_to_delete = (
-            db.query(UserCompany).filter(UserCompany.companyId == item).first()
-        )
         company_to_delete = db.query(Company).filter(Company.companyId == item).first()
 
-        if user_company_to_delete:
-            db.delete(user_company_to_delete)
-            db.commit()
         if company_to_delete:
             db.delete(company_to_delete)
             db.commit()
@@ -58,7 +53,7 @@ async def edit_company_service(edit, db: Session):
         db.commit()
 
 
-async def create_company_service(create, ambientId, userId, db: Session):
+async def create_company_service(create, ambient_id, user_id, db: Session):
     for item in create:
         if not (
             isinstance(item, dict)
@@ -76,23 +71,35 @@ async def create_company_service(create, ambientId, userId, db: Session):
             dateFormatId=item["dateFormatId"],
             currencyId=item["currencyId"],
             statusId=item["statusId"],
-            ambientId=ambientId,
+            ambientId=ambient_id,
         )
         db.add(company)
         db.flush()
 
-        user_company = UserCompany(userId=userId, companyId=company.companyId)
+        user_company = UserCompany(userId=user_id, companyId=company.companyId)
         db.add(user_company)
+
+        employee = Employee(
+            name="Admin",
+            document="-",
+            verification="verified",
+            userId=user_id,
+            companyId=company.companyId,
+        )
+        db.add(employee)
+
         db.commit()
 
 
-async def update_company_service(create, edit, delete, ambientId, userId, db: Session):
+async def update_company_service(
+    create, edit, delete, ambient_id, user_id, db: Session
+):
     try:
         db.begin()
 
         await delete_company_service(delete, db)
         await edit_company_service(edit, db)
-        await create_company_service(create, ambientId, userId, db)
+        await create_company_service(create, ambient_id, user_id, db)
 
         return {"success": True}
 

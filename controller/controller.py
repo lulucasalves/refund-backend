@@ -18,6 +18,7 @@ async def controller(function, body, req, db=None):
                 status_code=int(e.status_code), detail=t(e.detail, accept_language)
             )
         elif hasattr(e, "detail"):
+            print(e)
             [status_code, detail] = e.detail.split(": ")
 
             raise HTTPException(

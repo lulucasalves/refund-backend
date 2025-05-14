@@ -99,3 +99,28 @@ CREATE TABLE IF NOT EXISTS event (
     FOREIGN KEY (companyId) REFERENCES company(companyId),
     UNIQUE KEY (name, companyId)
 );
+
+CREATE TABLE IF NOT EXISTS employee (
+    employeeId CHAR(36) PRIMARY KEY DEFAULT (UUID()),
+    name VARCHAR(100) NOT NULL,
+    phone VARCHAR(30),
+    document VARCHAR(30) NOT NULL,
+    verification VARCHAR(30) NOT NULL,
+    userId CHAR(36) NOT NULL,
+    companyId CHAR(36) NOT NULL,
+    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (userId) REFERENCES user(userId),
+    UNIQUE KEY (userId, companyId)
+);
+
+CREATE TABLE IF NOT EXISTS employeeInvite (
+    employeeInviteId CHAR(36) PRIMARY KEY DEFAULT (UUID()),
+    code CHAR(30) NOT NULL,
+    employeeId CHAR(36) NOT NULL,
+    confirmed TINYINT(1) DEFAULT 0,
+    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (employeeId) REFERENCES employee(employeeId),
+    UNIQUE KEY (employeeId)
+);

@@ -9,6 +9,7 @@ from routers import (
     ambient,
     event_status,
     event,
+    employee,
 )
 from dotenv import load_dotenv
 import sys
@@ -36,6 +37,7 @@ app.include_router(date_format.router)
 app.include_router(company.router)
 app.include_router(event.router)
 app.include_router(ambient.router)
+app.include_router(employee.router)
 
 
 @app.get("/hc")

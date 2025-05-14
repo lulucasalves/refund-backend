@@ -59,13 +59,13 @@ async def create_user(email, country, db):
         currency = serialize_array(
             await get_currency_service({"filters": {"countries": [country]}}, db)
         )[0]
-        dateFormat = serialize_array(
+        date_format = serialize_array(
             await get_date_format_service({"filters": {"countries": [country]}}, db)
         )[0]
 
         company = Company(
             name="Company 1",
-            dateFormatId=dateFormat["dateFormatId"],
+            dateFormatId=date_format["dateFormatId"],
             currencyId=currency["currencyId"],
             statusId=status["statusId"],
             ambientId=ambient.ambientId,
@@ -84,10 +84,9 @@ async def create_user(email, country, db):
         db.commit()
         db.refresh(user)
 
-        userCompany = UserCompany(userId=user.userId, companyId=company.companyId)
-        db.add(userCompany)
+        user_company = UserCompany(userId=user.userId, companyId=company.companyId)
+        db.add(user_company)
         db.commit()
-        db.refresh(userCompany)
 
         return True
     except Exception as e:
