@@ -5,17 +5,8 @@ from models.user_company import UserCompany
 from fastapi import HTTPException
 from utils.format_date import format_date
 from services.user import create_user
-from utils.code_generator import generate_code
+from services.employee_invite import send_verify_code
 from models.employee_invite import EmployeeInvite
-
-
-async def send_verify_code(employee_id, db=Session):
-    employee_invite = EmployeeInvite(
-        employeeId=employee_id,
-        code=generate_code(30, "alphanumeric"),
-    )
-    db.add(employee_invite)
-    db.commit()
 
 
 async def remove_employee_conditions(employee_id, user_id, company_id, db=Session):
@@ -39,6 +30,10 @@ async def remove_employee_conditions(employee_id, user_id, company_id, db=Sessio
     db.commit()
 
 
+def get_user_by_email(email, db):
+    return db.query(User).filter(User.email == email).first()
+
+
 async def get_employee_service(filters, user_id, db: Session):
     query = (
         db.query(Employee, User.email)
@@ -58,39 +53,6 @@ async def get_employee_service(filters, user_id, db: Session):
         employees.append(employee_dict)
 
     return employees
-
-
-def get_user_by_email(email, db):
-    return db.query(User).filter(User.email == email).first()
-
-
-async def verify_employee_service(code, db: Session):
-    employee_invite = (
-        db.query(EmployeeInvite).filter(EmployeeInvite.code == code).first()
-    )
-
-    if employee_invite is None or employee_invite.confirmed == True:
-        raise HTTPException(
-            status_code=400, detail="ausent_credentials_verify_employee"
-        )
-
-    employee = (
-        db.query(Employee)
-        .filter(Employee.employeeId == employee_invite.employeeId)
-        .first()
-    )
-    employee.verification = "verified"
-    db.add(employee)
-
-    employee_invite.confirmed = True
-    db.add(employee_invite)
-
-    user_company = UserCompany(userId=employee.userId, companyId=employee.companyId)
-    db.add(user_company)
-
-    db.commit()
-
-    return {"success": True}
 
 
 async def delete_employee_service(delete, company_id, db: Session):

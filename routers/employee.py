@@ -5,7 +5,6 @@ from sqlalchemy.orm import Session
 from controller.employee import (
     get_employee_controller,
     update_employee_controller,
-    verify_employee_controller,
 )
 from controller.controller import controller
 from middleware.route_middleware import route_middleware
@@ -25,15 +24,6 @@ async def get_employee(
     _=Depends(route_middleware),
 ):
     return await controller(get_employee_controller, body, request, db)
-
-
-@router.get("/verify/{code}")
-async def verify_employee(
-    code: str,
-    request: Request,
-    db: Session = Depends(get_db),
-):
-    return await controller(verify_employee_controller, code, request, db)
 
 
 class UpdateEmployeeBody(BaseModel):

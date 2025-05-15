@@ -10,6 +10,7 @@ from routers import (
     event_status,
     event,
     employee,
+    employee_invite,
 )
 from dotenv import load_dotenv
 import sys
@@ -38,6 +39,7 @@ app.include_router(company.router)
 app.include_router(event.router)
 app.include_router(ambient.router)
 app.include_router(employee.router)
+app.include_router(employee_invite.router)
 
 
 @app.get("/hc")

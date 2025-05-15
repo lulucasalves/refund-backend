@@ -53,9 +53,6 @@ async def create_user(email, country, db):
         db.commit()
         db.refresh(ambient)
 
-        status = serialize_array(
-            await get_company_status_service({"filters": {"status": ["active"]}}, db)
-        )[0]
         currency = serialize_array(
             await get_currency_service({"filters": {"countries": [country]}}, db)
         )[0]
@@ -67,7 +64,7 @@ async def create_user(email, country, db):
             name="Company 1",
             dateFormatId=date_format["dateFormatId"],
             currencyId=currency["currencyId"],
-            statusId=status["statusId"],
+            statusId="c0246355-2708-11f0-9bf9-0242ac130002",
             ambientId=ambient.ambientId,
         )
         db.add(company)

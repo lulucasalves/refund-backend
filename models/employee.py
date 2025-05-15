@@ -1,7 +1,6 @@
 from sqlalchemy import Column, String, DateTime
 import uuid
-
-
+from datetime import datetime
 from database.mysql import Base
 
 
@@ -17,4 +16,4 @@ class Employee(Base):
     verification = Column(String(30))
     userId = Column(String(36))
     companyId = Column(String(36))
-    createdAt = Column(DateTime)
+    createdAt = Column(DateTime, default=datetime.utcnow)

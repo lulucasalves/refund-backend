@@ -1,7 +1,6 @@
 from sqlalchemy import Column, String, DateTime
 import uuid
-
-
+from datetime import datetime
 from database.mysql import Base
 
 
@@ -16,4 +15,4 @@ class Event(Base):
     companyId = Column(String(36))
     startDate = Column(DateTime)
     endDate = Column(DateTime)
-    createdAt = Column(DateTime)
+    createdAt = Column(DateTime, default=datetime.utcnow)
